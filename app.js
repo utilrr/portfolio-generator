@@ -1,6 +1,5 @@
-const inquirer = require("inquirer");
-const { fetchAsyncQuestionProperty } = require("inquirer/lib/utils/utils");
 const fs = require("fs");
+const inquirer = require("inquirer");
 const generatePage = require("./src/page-template");
 
 const promptUser = () => {
@@ -26,7 +25,7 @@ const promptUser = () => {
         if (githubInput) {
           return true;
         } else {
-          console.log("Please enter you GitHub username!");
+          console.log("Please enter your GitHub username!");
           return false;
         }
       },
@@ -35,37 +34,29 @@ const promptUser = () => {
       type: "confirm",
       name: "confirmAbout",
       message:
-        "Would you like to enter some information about yourself for an About section?",
+        'Would you like to enter some information about yourself for an "About" section?',
       default: true,
     },
     {
       type: "input",
       name: "about",
       message: "Provide some information about yourself:",
-      when: ({ confirmAbout }) => {
-        if (confirmAbout) {
-          return true;
-        } else {
-          return false;
-        }
-      },
+      when: ({ confirmAbout }) => confirmAbout,
     },
   ]);
 };
-// promptUser().then((answers) => console.log(answers));
 
 const promptProject = (portfolioData) => {
   console.log(`
-    ==========================
-        Add a New Project
-    ==========================
-    `);
+=================
+Add a New Project
+=================
+`);
 
-  // If there is no 'projects' array property, create one
+  // If there's no 'projects' array property, create one
   if (!portfolioData.projects) {
     portfolioData.projects = [];
   }
-
   return inquirer
     .prompt([
       {
@@ -89,7 +80,7 @@ const promptProject = (portfolioData) => {
           if (descriptionInput) {
             return true;
           } else {
-            console.log("You need to enter a description for your project!");
+            console.log("You need to enter a project description!");
             return false;
           }
         },
@@ -97,7 +88,7 @@ const promptProject = (portfolioData) => {
       {
         type: "checkbox",
         name: "languages",
-        message: "what did you build this project with? (Check all that apply)",
+        message: "What did you this project with? (Check all that apply)",
         choices: [
           "JavaScript",
           "HTML",
@@ -116,12 +107,11 @@ const promptProject = (portfolioData) => {
           if (linkInput) {
             return true;
           } else {
-            console.log("You need to enter a GitHub project link!");
+            console.log("You need to enter a project GitHub link!");
             return false;
           }
         },
       },
-
       {
         type: "confirm",
         name: "feature",
@@ -144,14 +134,15 @@ const promptProject = (portfolioData) => {
       }
     });
 };
+
 promptUser()
   .then(promptProject)
   .then((portfolioData) => {
-    const pageHTML = generatePage();
-
+    console.log(portfolioData);
+    // will be uncommented in lesson 4
+    // const pageHTML = generatePage(portfolioData);
     // fs.writeFile('./index.html', pageHTML, err => {
     //   if (err) throw new Error(err);
-
     //   console.log('Page created! Check out index.html in this directory to see it!');
     // });
   });
